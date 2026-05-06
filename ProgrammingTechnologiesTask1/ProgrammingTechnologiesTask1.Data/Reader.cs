@@ -1,13 +1,13 @@
 ﻿namespace ProgrammingTechnologiesTask1.Data;
 
-public class Reader
+public class Reader : User
 {
-    public string ReaderId { get; }
-    public string Name { get; }
+    public override string UserId { get; }
+    public override string Name { get; }
 
-    public Reader(string readerId, string name)
+    public Reader(string userId, string name)
     {
-        ReaderId = readerId;
+        UserId = userId;
         Name = name;
     }
 }

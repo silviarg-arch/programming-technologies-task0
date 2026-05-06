@@ -1,13 +1,11 @@
-﻿using ProgrammingTechnologiesTask1.Data;
-
-namespace ProgrammingTechnologiesTask1.Logic;
+﻿namespace ProgrammingTechnologiesTask1.Logic;
 
 public interface ILibraryService
 {
-    void RegisterReader(string readerId, string name);
-    void AddBook(string bookId, string title, string author);
-    void BorrowBook(string readerId, string bookId);
-    void ReturnBook(string readerId, string bookId);
-    bool IsBookAvailable(string bookId);
+    void RegisterReader(string userId, string name);
+    void AddBook(string itemId, string title, string author);
+    void BorrowBook(string userId, string itemId);
+    void ReturnBook(string userId, string itemId);
+    bool IsBookAvailable(string itemId);
     int GetEventCount();
 }

@@ -4,90 +4,106 @@ namespace ProgrammingTechnologiesTask1.Logic;
 
 public class LibraryService : ILibraryService
 {
-    private readonly IDataRepository repository;
+    private readonly DataRepository repository;
 
-    public LibraryService(IDataRepository repository)
+    public LibraryService(DataRepository repository)
     {
         this.repository = repository;
     }
 
-    public void RegisterReader(string readerId, string name)
+    public void RegisterReader(string userId, string name)
     {
-        if (repository.Context.Users.ContainsKey(readerId))
+        if (repository.Context.Users.ContainsKey(userId))
         {
             throw new InvalidOperationException("Reader already exists.");
         }
 
-        Reader reader = new(readerId, name);
-        repository.AddReader(reader);
+        User reader = new Reader(userId, name);
+        repository.AddUser(reader);
     }
 
-    public void AddBook(string bookId, string title, string author)
+    public void AddBook(string itemId, string title, string author)
     {
-        if (repository.Context.Catalog.ContainsKey(bookId))
+        if (repository.Context.Catalog.ContainsKey(itemId))
         {
             throw new InvalidOperationException("Book already exists.");
         }
 
-        Book book = new(bookId, title, author);
-        repository.AddBook(book);
+        CatalogItem book = new Book(itemId, title, author);
+        repository.AddCatalogItem(book);
     }
 
-    public void BorrowBook(string readerId, string bookId)
+    public void BorrowBook(string userId, string itemId)
     {
-        if (!repository.Context.Users.ContainsKey(readerId))
+        if (!repository.Context.Users.ContainsKey(userId))
         {
             throw new InvalidOperationException("Reader does not exist.");
         }
 
-        if (!repository.Context.Catalog.ContainsKey(bookId))
+        if (!repository.Context.Catalog.ContainsKey(itemId))
         {
             throw new InvalidOperationException("Book does not exist.");
         }
 
-        if (repository.Context.State.BorrowedBooks.ContainsKey(bookId))
+        LibraryState state = GetLibraryState();
+
+        if (state.BorrowedBooks.ContainsKey(itemId))
         {
             throw new InvalidOperationException("Book is already borrowed.");
         }
 
-        repository.Context.State.BorrowedBooks[bookId] = readerId;
+        state.BorrowedBooks[itemId] = userId;
 
-        BorrowEvent borrowEvent = new(DateTime.Now, readerId, bookId);
+        LibraryEvent borrowEvent = new BorrowEvent(DateTime.Now, userId, itemId);
         repository.AddEvent(borrowEvent);
     }
 
-    public void ReturnBook(string readerId, string bookId)
+    public void ReturnBook(string userId, string itemId)
     {
-        if (!repository.Context.State.BorrowedBooks.ContainsKey(bookId))
+        LibraryState state = GetLibraryState();
+
+        if (!state.BorrowedBooks.ContainsKey(itemId))
         {
             throw new InvalidOperationException("Book is not borrowed.");
         }
 
-        string currentReaderId = repository.Context.State.BorrowedBooks[bookId];
+        string currentUserId = state.BorrowedBooks[itemId];
 
-        if (currentReaderId != readerId)
+        if (currentUserId != userId)
         {
             throw new InvalidOperationException("This reader did not borrow the book.");
         }
 
-        repository.Context.State.BorrowedBooks.Remove(bookId);
+        state.BorrowedBooks.Remove(itemId);
 
-        ReturnEvent returnEvent = new(DateTime.Now, readerId, bookId);
+        LibraryEvent returnEvent = new ReturnEvent(DateTime.Now, userId, itemId);
         repository.AddEvent(returnEvent);
     }
 
-    public bool IsBookAvailable(string bookId)
+    public bool IsBookAvailable(string itemId)
     {
-        if (!repository.Context.Catalog.ContainsKey(bookId))
+        if (!repository.Context.Catalog.ContainsKey(itemId))
         {
             throw new InvalidOperationException("Book does not exist.");
         }
 
-        return !repository.Context.State.BorrowedBooks.ContainsKey(bookId);
+        LibraryState state = GetLibraryState();
+
+        return !state.BorrowedBooks.ContainsKey(itemId);
     }
 
     public int GetEventCount()
     {
         return repository.Context.Events.Count;
+    }
+
+    private LibraryState GetLibraryState()
+    {
+        if (repository.Context.State is not LibraryState state)
+        {
+            throw new InvalidOperationException("Invalid library state.");
+        }
+
+        return state;
     }
 }

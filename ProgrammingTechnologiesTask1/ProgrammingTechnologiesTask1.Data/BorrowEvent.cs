@@ -2,8 +2,8 @@
 
 public class BorrowEvent : LibraryEvent
 {
-    public BorrowEvent(DateTime timestamp, string readerId, string bookId)
-        : base(timestamp, readerId, bookId)
+    public BorrowEvent(DateTime timestamp, string userId, string itemId)
+        : base(timestamp, userId, itemId)
     {
     }
 }

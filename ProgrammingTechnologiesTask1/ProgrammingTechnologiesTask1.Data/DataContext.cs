@@ -1,9 +1,9 @@
 ﻿namespace ProgrammingTechnologiesTask1.Data;
 
-public class DataContext : IDataContext
+public abstract class DataContext
 {
-    public Dictionary<string, Book> Catalog { get; } = new();
-    public Dictionary<string, Reader> Users { get; } = new();
-    public LibraryState State { get; } = new();
-    public List<LibraryEvent> Events { get; } = new();
+    public abstract Dictionary<string, User> Users { get; }
+    public abstract Dictionary<string, CatalogItem> Catalog { get; }
+    public abstract ProcessState State { get; }
+    public abstract List<LibraryEvent> Events { get; }
 }

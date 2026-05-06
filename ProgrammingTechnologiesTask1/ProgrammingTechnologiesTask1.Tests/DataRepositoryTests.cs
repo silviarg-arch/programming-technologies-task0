@@ -5,24 +5,24 @@ namespace ProgrammingTechnologiesTask1.Tests;
 public class DataRepositoryTests
 {
     [Fact]
-    public void AddReader_ShouldStoreReaderInUsersCollection()
+    public void AddUser_ShouldStoreReaderInUsersCollection()
     {
-        IDataRepository repository = TestDataGenerator.CreateEmptyRepository();
+        DataRepository repository = TestDataGenerator.CreateEmptyRepository();
         Reader reader = new("R1", "Alice");
 
-        repository.AddReader(reader);
+        repository.AddUser(reader);
 
         Assert.True(repository.Context.Users.ContainsKey("R1"));
         Assert.Equal("Alice", repository.Context.Users["R1"].Name);
     }
 
     [Fact]
-    public void AddBook_ShouldStoreBookInCatalog()
+    public void AddCatalogItem_ShouldStoreBookInCatalog()
     {
-        IDataRepository repository = TestDataGenerator.CreateEmptyRepository();
+        DataRepository repository = TestDataGenerator.CreateEmptyRepository();
         Book book = new("B1", "1984", "George Orwell");
 
-        repository.AddBook(book);
+        repository.AddCatalogItem(book);
 
         Assert.True(repository.Context.Catalog.ContainsKey("B1"));
         Assert.Equal("1984", repository.Context.Catalog["B1"].Title);
@@ -31,7 +31,7 @@ public class DataRepositoryTests
     [Fact]
     public void AddEvent_ShouldStoreEventInEventsCollection()
     {
-        IDataRepository repository = TestDataGenerator.CreateEmptyRepository();
+        DataRepository repository = TestDataGenerator.CreateEmptyRepository();
         LibraryEvent libraryEvent = new BorrowEvent(DateTime.Now, "R1", "B1");
 
         repository.AddEvent(libraryEvent);

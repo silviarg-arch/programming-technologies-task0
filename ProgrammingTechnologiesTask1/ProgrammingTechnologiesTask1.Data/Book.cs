@@ -1,14 +1,14 @@
 ﻿namespace ProgrammingTechnologiesTask1.Data;
 
-public class Book
+public class Book : CatalogItem
 {
-    public string BookId { get; }
-    public string Title { get; }
+    public override string ItemId { get; }
+    public override string Title { get; }
     public string Author { get; }
 
-    public Book(string bookId, string title, string author)
+    public Book(string itemId, string title, string author)
     {
-        BookId = bookId;
+        ItemId = itemId;
         Title = title;
         Author = author;
     }

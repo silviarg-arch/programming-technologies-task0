@@ -3,13 +3,13 @@
 public abstract class LibraryEvent
 {
     public DateTime Timestamp { get; }
-    public string ReaderId { get; }
-    public string BookId { get; }
+    public string UserId { get; }
+    public string ItemId { get; }
 
-    protected LibraryEvent(DateTime timestamp, string readerId, string bookId)
+    protected LibraryEvent(DateTime timestamp, string userId, string itemId)
     {
         Timestamp = timestamp;
-        ReaderId = readerId;
-        BookId = bookId;
+        UserId = userId;
+        ItemId = itemId;
     }
 }
