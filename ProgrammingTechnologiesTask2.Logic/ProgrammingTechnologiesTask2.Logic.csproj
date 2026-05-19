@@ -41,8 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Models\BookDto.cs" />
+    <Compile Include="Models\LibraryEventDto.cs" />
+    <Compile Include="Models\ReaderDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\LibraryService.cs" />
+    <Compile Include="Services\LibraryServiceImplementation.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ProgrammingTechnologiesTask2.Data\ProgrammingTechnologiesTask2.Data.csproj">
