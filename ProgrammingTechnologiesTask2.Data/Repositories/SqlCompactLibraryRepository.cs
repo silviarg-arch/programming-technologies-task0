@@ -65,7 +65,9 @@ namespace ProgrammingTechnologiesTask2.Data.Repositories
             using (LibraryDataContext context = CreateContext())
             {
                 // LINQ method syntax
-                return context.Books.FirstOrDefault(book => book.BookId == bookId);
+                return context.Books
+                    .ToList()
+                    .FirstOrDefault(book => book.BookId == bookId);
             }
         }
 
@@ -92,7 +94,9 @@ namespace ProgrammingTechnologiesTask2.Data.Repositories
         {
             using (LibraryDataContext context = CreateContext())
             {
-                BookEntity book = context.Books.FirstOrDefault(item => item.BookId == bookId);
+                BookEntity book = context.Books
+                    .ToList()
+                    .FirstOrDefault(item => item.BookId == bookId);
 
                 if (book == null)
                 {
@@ -111,7 +115,9 @@ namespace ProgrammingTechnologiesTask2.Data.Repositories
         {
             using (LibraryDataContext context = CreateContext())
             {
-                BookEntity book = context.Books.FirstOrDefault(item => item.BookId == bookId);
+                BookEntity book = context.Books
+                    .ToList()
+                    .FirstOrDefault(item => item.BookId == bookId);
 
                 if (book == null)
                 {
@@ -127,7 +133,9 @@ namespace ProgrammingTechnologiesTask2.Data.Repositories
         {
             using (LibraryDataContext context = CreateContext())
             {
-                BookEntity book = context.Books.FirstOrDefault(item => item.BookId == bookId);
+                BookEntity book = context.Books
+                    .ToList()
+                    .FirstOrDefault(item => item.BookId == bookId);
 
                 if (book == null)
                 {
@@ -157,7 +165,9 @@ namespace ProgrammingTechnologiesTask2.Data.Repositories
             using (LibraryDataContext context = CreateContext())
             {
                 // LINQ method syntax
-                return context.Readers.FirstOrDefault(reader => reader.ReaderId == readerId);
+                return context.Readers
+                    .ToList()
+                    .FirstOrDefault(reader => reader.ReaderId == readerId);
             }
         }
 
@@ -183,7 +193,9 @@ namespace ProgrammingTechnologiesTask2.Data.Repositories
             using (LibraryDataContext context = CreateContext())
             {
                 // LINQ method syntax
-                return context.Loans.FirstOrDefault(loan => loan.BookId == bookId && loan.ReturnDate == null);
+                return context.Loans
+                    .ToList()
+                    .FirstOrDefault(loan => loan.BookId == bookId && loan.ReturnDate == null);
             }
         }
 
@@ -210,7 +222,9 @@ namespace ProgrammingTechnologiesTask2.Data.Repositories
         {
             using (LibraryDataContext context = CreateContext())
             {
-                LoanEntity loan = context.Loans.FirstOrDefault(item => item.LoanId == loanId);
+                LoanEntity loan = context.Loans
+                    .ToList()
+                    .FirstOrDefault(item => item.LoanId == loanId);
 
                 if (loan == null)
                 {
@@ -244,7 +258,7 @@ namespace ProgrammingTechnologiesTask2.Data.Repositories
         {
             using (LibraryDataContext context = CreateContext())
             {
-                // LINQ query syntax
+                
                 var query =
                     from libraryEvent in context.LibraryEvents
                     orderby libraryEvent.EventDate descending
