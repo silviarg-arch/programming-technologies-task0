@@ -46,6 +46,7 @@
     <Compile Include="Models\ReaderDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\LibraryService.cs" />
+    <Compile Include="Services\LibraryServiceFactory.cs" />
     <Compile Include="Services\LibraryServiceImplementation.cs" />
   </ItemGroup>
   <ItemGroup>

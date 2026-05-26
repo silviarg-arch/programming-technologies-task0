@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using ProgrammingTechnologiesTask2.Presentation.Model.Models;
 using ProgrammingTechnologiesTask2.Presentation.ViewModel.Commands;
@@ -11,6 +12,7 @@ namespace ProgrammingTechnologiesTask2.Presentation.ViewModel.ViewModels
     public class MainViewModel : ViewModelBase
     {
         private readonly LibraryPresentationModel model;
+        private readonly SynchronizationContext synchronizationContext;
 
         private BookModel selectedBook;
         private ReaderModel selectedReader;
@@ -20,9 +22,15 @@ namespace ProgrammingTechnologiesTask2.Presentation.ViewModel.ViewModels
         private string newPublicationYear;
         private string statusMessage;
 
+        public MainViewModel()
+            : this(new LibraryPresentationModel())
+        {
+        }
+
         public MainViewModel(LibraryPresentationModel model)
         {
             this.model = model;
+            synchronizationContext = SynchronizationContext.Current;
 
             Books = new ObservableCollection<BookModel>();
             Readers = new ObservableCollection<ReaderModel>();
@@ -48,15 +56,11 @@ namespace ProgrammingTechnologiesTask2.Presentation.ViewModel.ViewModels
 
         public BookModel SelectedBook
         {
-            get
-            {
-                return selectedBook;
-            }
+            get { return selectedBook; }
             set
             {
                 selectedBook = value;
                 OnPropertyChanged();
-
                 CopySelectedBookToEditor();
                 RaiseCommandStates();
             }
@@ -64,10 +68,7 @@ namespace ProgrammingTechnologiesTask2.Presentation.ViewModel.ViewModels
 
         public ReaderModel SelectedReader
         {
-            get
-            {
-                return selectedReader;
-            }
+            get { return selectedReader; }
             set
             {
                 selectedReader = value;
@@ -78,10 +79,7 @@ namespace ProgrammingTechnologiesTask2.Presentation.ViewModel.ViewModels
 
         public string SearchText
         {
-            get
-            {
-                return searchText;
-            }
+            get { return searchText; }
             set
             {
                 searchText = value;
@@ -91,10 +89,7 @@ namespace ProgrammingTechnologiesTask2.Presentation.ViewModel.ViewModels
 
         public string NewTitle
         {
-            get
-            {
-                return newTitle;
-            }
+            get { return newTitle; }
             set
             {
                 newTitle = value;
@@ -105,10 +100,7 @@ namespace ProgrammingTechnologiesTask2.Presentation.ViewModel.ViewModels
 
         public string NewAuthor
         {
-            get
-            {
-                return newAuthor;
-            }
+            get { return newAuthor; }
             set
             {
                 newAuthor = value;
@@ -119,10 +111,7 @@ namespace ProgrammingTechnologiesTask2.Presentation.ViewModel.ViewModels
 
         public string NewPublicationYear
         {
-            get
-            {
-                return newPublicationYear;
-            }
+            get { return newPublicationYear; }
             set
             {
                 newPublicationYear = value;
@@ -133,10 +122,7 @@ namespace ProgrammingTechnologiesTask2.Presentation.ViewModel.ViewModels
 
         public string StatusMessage
         {
-            get
-            {
-                return statusMessage;
-            }
+            get { return statusMessage; }
             set
             {
                 statusMessage = value;
@@ -145,24 +131,24 @@ namespace ProgrammingTechnologiesTask2.Presentation.ViewModel.ViewModels
         }
 
         public AsyncRelayCommand LoadDataCommand { get; private set; }
-
         public AsyncRelayCommand SearchCommand { get; private set; }
-
         public AsyncRelayCommand AddBookCommand { get; private set; }
-
         public AsyncRelayCommand UpdateBookCommand { get; private set; }
-
         public AsyncRelayCommand DeleteBookCommand { get; private set; }
-
         public AsyncRelayCommand BorrowBookCommand { get; private set; }
-
         public AsyncRelayCommand ReturnBookCommand { get; private set; }
-
         public RelayCommand ClearEditorCommand { get; private set; }
 
-        private async void OnModelDataChanged(object sender, EventArgs e)
+        private void OnModelDataChanged(object sender, EventArgs e)
         {
-            await LoadDataAsync();
+            if (synchronizationContext != null)
+            {
+                synchronizationContext.Post(async state => await LoadDataAsync(), null);
+            }
+            else
+            {
+                Task.Run(async () => await LoadDataAsync());
+            }
         }
 
         private async Task LoadDataAsync()
@@ -244,9 +230,7 @@ namespace ProgrammingTechnologiesTask2.Presentation.ViewModel.ViewModels
                     return;
                 }
 
-                int bookId = SelectedBook.BookId;
-
-                await Task.Run(() => model.UpdateBook(bookId, NewTitle, NewAuthor, publicationYear));
+                await Task.Run(() => model.UpdateBook(SelectedBook.BookId, NewTitle, NewAuthor, publicationYear));
 
                 StatusMessage = "Book updated successfully.";
             }
@@ -289,10 +273,7 @@ namespace ProgrammingTechnologiesTask2.Presentation.ViewModel.ViewModels
                     return;
                 }
 
-                int bookId = SelectedBook.BookId;
-                int readerId = SelectedReader.ReaderId;
-
-                await Task.Run(() => model.BorrowBook(bookId, readerId));
+                await Task.Run(() => model.BorrowBook(SelectedBook.BookId, SelectedReader.ReaderId));
 
                 StatusMessage = "Book borrowed successfully.";
             }
@@ -312,9 +293,7 @@ namespace ProgrammingTechnologiesTask2.Presentation.ViewModel.ViewModels
                     return;
                 }
 
-                int bookId = SelectedBook.BookId;
-
-                await Task.Run(() => model.ReturnBook(bookId));
+                await Task.Run(() => model.ReturnBook(SelectedBook.BookId));
 
                 StatusMessage = "Book returned successfully.";
             }
@@ -372,30 +351,11 @@ namespace ProgrammingTechnologiesTask2.Presentation.ViewModel.ViewModels
 
         private void RaiseCommandStates()
         {
-            if (AddBookCommand != null)
-            {
-                AddBookCommand.RaiseCanExecuteChanged();
-            }
-
-            if (UpdateBookCommand != null)
-            {
-                UpdateBookCommand.RaiseCanExecuteChanged();
-            }
-
-            if (DeleteBookCommand != null)
-            {
-                DeleteBookCommand.RaiseCanExecuteChanged();
-            }
-
-            if (BorrowBookCommand != null)
-            {
-                BorrowBookCommand.RaiseCanExecuteChanged();
-            }
-
-            if (ReturnBookCommand != null)
-            {
-                ReturnBookCommand.RaiseCanExecuteChanged();
-            }
+            if (AddBookCommand != null) AddBookCommand.RaiseCanExecuteChanged();
+            if (UpdateBookCommand != null) UpdateBookCommand.RaiseCanExecuteChanged();
+            if (DeleteBookCommand != null) DeleteBookCommand.RaiseCanExecuteChanged();
+            if (BorrowBookCommand != null) BorrowBookCommand.RaiseCanExecuteChanged();
+            if (ReturnBookCommand != null) ReturnBookCommand.RaiseCanExecuteChanged();
         }
 
         private static void ReplaceCollection<T>(ObservableCollection<T> collection, IEnumerable<T> items)

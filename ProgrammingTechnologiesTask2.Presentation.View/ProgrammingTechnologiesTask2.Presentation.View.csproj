@@ -99,18 +99,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ProgrammingTechnologiesTask2.Data\ProgrammingTechnologiesTask2.Data.csproj">
-      <Project>{754f0a4b-9bfc-4b2f-8743-024925052e76}</Project>
-      <Name>ProgrammingTechnologiesTask2.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ProgrammingTechnologiesTask2.Logic\ProgrammingTechnologiesTask2.Logic.csproj">
-      <Project>{0be72b13-77ea-45ca-a8a0-cf4de0d8cae4}</Project>
-      <Name>ProgrammingTechnologiesTask2.Logic</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ProgrammingTechnologiesTask2.Presentation.Model\ProgrammingTechnologiesTask2.Presentation.Model.csproj">
-      <Project>{ae706276-616f-4b58-a68a-a115a0909e53}</Project>
-      <Name>ProgrammingTechnologiesTask2.Presentation.Model</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ProgrammingTechnologiesTask2.Presentation.ViewModel\ProgrammingTechnologiesTask2.Presentation.ViewModel.csproj">
       <Project>{163a6060-87bf-4305-adec-720774eaa8a7}</Project>
       <Name>ProgrammingTechnologiesTask2.Presentation.ViewModel</Name>

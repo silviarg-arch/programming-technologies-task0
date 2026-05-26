@@ -14,6 +14,11 @@ namespace ProgrammingTechnologiesTask2.Presentation.Model.Models
 
         public event LibraryModelChangedEventHandler DataChanged;
 
+        public LibraryPresentationModel()
+            : this(LibraryServiceFactory.CreateDefault())
+        {
+        }
+
         public LibraryPresentationModel(LibraryService libraryService)
         {
             this.libraryService = libraryService;

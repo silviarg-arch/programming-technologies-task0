@@ -60,6 +60,7 @@
     <Compile Include="Models\ReaderEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\LibraryRepository.cs" />
+    <Compile Include="Repositories\LibraryRepositoryFactory.cs" />
     <Compile Include="Repositories\SqlCompactLibraryRepository.cs" />
   </ItemGroup>
   <ItemGroup>
